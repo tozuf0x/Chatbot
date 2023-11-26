@@ -10,7 +10,12 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('deleteBtn').addEventListener('click', function () {
         deleteSelectedErrors();
     });
-
+ document.getElementById('selectAllCheckbox').addEventListener('change', function () {
+        const checkboxes = document.querySelectorAll('input[name="errorRadio"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+    });
     // Your other event listeners and functions go here
 });
 function fetchExistingData() {
@@ -57,6 +62,7 @@ function deleteSelectedErrors() {
             .then(response => {
                 console.log(response.data.message);
                 // Refresh the page or update the UI as needed
+                fetchExistingData();
             })
             .catch(error => {
                 console.error('Error deleting errors:', error);
@@ -69,11 +75,12 @@ function deleteSelectedErrors() {
 function getSelectedIds() {
     // Code to get the IDs of selected errors goes here
     const selectedIds = [];
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+    const checkboxes = document.querySelectorAll('input[name="errorRadio"]:checked');
     checkboxes.forEach(checkbox => {
         selectedIds.push(parseInt(checkbox.value));
     });
     return selectedIds;
+}
     // Add this inside the script.js file
     
     document.addEventListener('DOMContentLoaded', function () {
