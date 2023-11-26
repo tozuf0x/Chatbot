@@ -75,44 +75,110 @@ function getSelectedIds() {
     });
     return selectedIds;
     // Add this inside the script.js file
-function showAddModal() {
-    // Clear the form before showing the modal
-    document.getElementById('errorForm').reset();
-
-    // Set up the modal for adding a new error
-    $('#addModal').modal('show');
-}
-
-function submitForm() {
-    const formData = {
-        code: document.getElementById('code').value,
-        errtext: document.getElementById('errtext').value,
-        recommendation: document.getElementById('recommendation').value,
-        obj: document.getElementById('obj').value
-    };
-
-    // Determine whether to add or update an error
-    const isUpdate = formData.hasOwnProperty('id') && formData.id !== '';
-
-    // Make an Axios request to add or update the error
-    const requestUrl = isUpdate ? '/update' : '/add';
-    const httpMethod = isUpdate ? 'PUT' : 'POST';
-
-    axios({
-        method: httpMethod,
-        url: requestUrl,
-        data: formData
-    })
-    .then(response => {
-        console.log(response.data.message);
-        // Close the modal
-        $('#addModal').modal('hide');
-        // Fetch and display updated data from the server
-        fetchExistingData();
-    })
-    .catch(error => {
-        console.error('Error adding/updating error:', error);
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        // Add event listener for the "Add" button to show the modal
+        document.querySelector('.btn-primary').addEventListener('click', function () {
+            showAddModal();
+        });
+    
+        // Add event listener for the "Delete" button
+        document.getElementById('deleteBtn').addEventListener('click', function () {
+            deleteSelectedErrors();
+        });
+    
+        // Your other event listeners and functions go here
     });
-}
-
+    function fetchExistingData() {
+        // Make an Axios request to get existing data from the server
+        axios.get('/')
+            .then(response => {
+                // Update the table with the existing data
+                updateTable(response.data.errors);
+            })
+            .catch(error => {
+                console.error('Error fetching existing data:', error);
+            });
+    }
+    
+    function updateTable(errors) {
+        // Clear the existing table rows
+        const tableBody = document.querySelector('tbody');
+        tableBody.innerHTML = '';
+    
+        // Populate the table with the fetched data
+        errors.forEach(error => {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${error.code}</td>
+                <td>${error.errtext}</td>
+                <td>${error.recommendation}</td>
+                <td>${error.obj}</td>
+            `;
+            tableBody.appendChild(newRow);
+        });
+    }
+    let selectedErrorId; // Variable to store the ID of the selected error for updating
+    
+    function showAddModal() {
+        // Clear the form before showing the modal
+        document.getElementById('errorForm').reset();
+        selectedErrorId = null;
+    
+        // Set up the modal for adding a new error
+        $('#addModal').modal('show');
+    }
+    
+    function showUpdateModal(id) {
+        // Set the selected error ID for updating
+        selectedErrorId = id;
+    
+        // Fetch the existing data for the selected error
+        axios.get(`/get/${id}`)
+            .then(response => {
+                const error = response.data.error;
+                // Populate the form with existing data
+                document.getElementById('code').value = error.code;
+                document.getElementById('errtext').value = error.errtext;
+                document.getElementById('recommendation').value = error.recommendation;
+                document.getElementById('obj').value = error.obj;
+                // Show the modal for updating
+                $('#addModal').modal('show');
+            })
+            .catch(error => {
+                console.error('Error fetching error data:', error);
+            });
+    }
+    
+    function submitForm() {
+        const formData = {
+            code: document.getElementById('code').value,
+            errtext: document.getElementById('errtext').value,
+            recommendation: document.getElementById('recommendation').value,
+            obj: document.getElementById('obj').value
+        };
+    
+        // Determine whether to add or update an error
+        const isUpdate = selectedErrorId !== null;
+    
+        // Make an Axios request to add or update the error
+        const requestUrl = isUpdate ? `/update/${selectedErrorId}` : '/add';
+        const httpMethod = isUpdate ? 'PUT' : 'POST';
+    
+        axios({
+            method: httpMethod,
+            url: requestUrl,
+            data: formData
+        })
+        .then(response => {
+            console.log(response.data.message);
+            // Close the modal
+            $('#addModal').modal('hide');
+            // Fetch and display updated data from the server
+            fetchExistingData();
+        })
+        .catch(error => {
+            console.error('Error adding/updating error:', error);
+        });
+    }
 }
