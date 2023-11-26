@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error CRUD</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-4">
+    <h2>Error Table</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <!--<th scope="col">#</th>-->
+                <th scope="col">Code</th>
+                <th scope="col">Error Text</th>
+                <th scope="col">Recommendation</th>
+                <th scope="col">Object</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for error in errors %}
+                <tr>
+                    <!--<td>{{ error.id }}</td>-->
+                    <td>{{ error.code }}</td>
+                    <td>{{ error.errtext }}</td>
+                    <td>{{ error.recommendation }}</td>
+                    <td>{{ error.obj }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">
+        Add
+    </button>
+    <button type="button" class="btn btn-danger" id="deleteBtn">
+        Delete
+    </button>
+
+    <!-- Add Modal -->
+<div class="modal" tabindex="-1" role="dialog" id="addModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add or Update Error</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="errorForm">
+                    <div class="form-group">
+                        <label for="code">Code:</label>
+                        <input type="text" class="form-control" id="code" name="code" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="errtext">Error Text:</label>
+                        <input type="text" class="form-control" id="errtext" name="errtext" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="recommendation">Recommendation:</label>
+                        <input type="text" class="form-control" id="recommendation" name="recommendation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="obj">Object:</label>
+                        <input type="text" class="form-control" id="obj" name="obj" required>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="E:\CRUD\script.js">
+   
+</script>
+
+</body>
+</html>
