@@ -7,7 +7,7 @@ db = SQLAlchemy(app)
 app.app_context().push()
 
 class Errors(db.Model):
-    #id = db.Column(db.Integer, primary_key=True)
+    errorID = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(255), primary_key=True)
     errtext = db.Column(db.String(255))
     recommendation = db.Column(db.String(255))
@@ -28,25 +28,21 @@ def add_error():
     db.session.add(error)
     db.session.commit()
     return jsonify({'message': 'Error added successfully'})
-@app.route('/update', methods=['PUT'])
 
-def add_or_update_error():
+# Update error
+@app.route('/update/<int:error_id>', methods=['PUT'])
+def update_error(error_id):
     data = request.get_json()
+    error = Errors.query.get(error_id)
 
-    if 'id' in data:
-        # If 'id' is present, it's an update
-        error_id = data.pop('id')
-        error = Errors.query.get(error_id)
+    if error:
         for key, value in data.items():
             setattr(error, key, value)
+
+        db.session.commit()
+        return jsonify({'message': 'Error updated successfully'})
     else:
-        # If 'id' is not present, it's an add
-        error = Errors(**data)
-
-    db.session.add(error)
-    db.session.commit()
-
-    return jsonify({'message': 'Error added/updated successfully'})
+        return jsonify({'message': 'Error not found'}), 404
 
 @app.route('/delete', methods=['POST'])
 def delete_error():
