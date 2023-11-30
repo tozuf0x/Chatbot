@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error CRUD</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    
 </head>
 <body>
 
@@ -14,17 +15,19 @@
     <table class="table">
         <thead>
             <tr>
-                <!--<th scope="col">#</th>-->
-                <th scope="col">Code</th>
-                <th scope="col">Error Text</th>
-                <th scope="col">Recommendation</th>
-                <th scope="col">Object</th>
+                <th scope="col">#</th>
+        <th scope="col">Select</th> <!-- New column for radio buttons -->
+        <th scope="col">Code</th>
+        <th scope="col">Error Text</th>
+        <th scope="col">Recommendation</th>
+        <th scope="col">Object</th>
             </tr>
         </thead>
         <tbody>
             {% for error in errors %}
                 <tr>
-                    <!--<td>{{ error.id }}</td>-->
+                    <td>{{ error.id }}</td>
+                    <td><input type="radio" name="errorRadio" value="{{ error.id }}"></td> <!-- Radio button for selection -->
                     <td>{{ error.code }}</td>
                     <td>{{ error.errtext }}</td>
                     <td>{{ error.recommendation }}</td>
@@ -37,6 +40,7 @@
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">
         Add
     </button>
+    <button type="button" class="btn btn-secondary" onclick="showUpdateModal('{{ errors.id }}')">Update</button>
     <button type="button" class="btn btn-danger" id="deleteBtn">
         Delete
     </button>
@@ -83,9 +87,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="E:\CRUD\script.js">
-   
-</script>
-
+<script src="https://cdn.jsdelivr.net/gh/tozuf0x/Chatbot@main/CRUD/script.js"></script>
 </body>
 </html>
